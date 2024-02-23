@@ -5,8 +5,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"
-import tailwindStyles from "./tailwind.css"
-import vidstackStyles from "@vidstack/react/player/styles/base.css"
+import tailwindStyles from "~/tailwind.css?url"
+import vidstackStyles from "@vidstack/react/player/styles/base.css?url"
 import { IntlProvider } from "react-intl"
 import type { LinksFunction } from "@remix-run/node";
 
