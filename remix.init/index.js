@@ -50,6 +50,23 @@ async function copyTemplateFiles(rootDirectory, useEdge) {
   await mergeDirs(source, rootDirectory);
 }
 
+const newScripts = {
+  clean: "rimraf ./node_modules/.cache ./server/dist ./build ./public/build",
+  prebuild: "npm run clean && echo All clean ✨",
+  lint: "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+  lint:fix: "eslint --fix --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+  format: "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)\"",
+  test: "vitest",
+  coverage: "vitest run --coverage",
+  test:e2e: "npm run test:e2e:dev --silent",
+  test:e2e:dev: "playwright test --ui",
+  pretest:e2e:run: "npm run build",
+  test:e2e:run: "playwright test",
+  test:e2e:install: "npx playwright install --with-deps chromium",
+  typecheck: "tsc",
+  prepare: "husky install"
+}
+
 async function removeUpdatePackageJson(directory, dependencies) {
   const packageJson = await PackageJson.load(directory);
 
@@ -59,6 +76,10 @@ async function removeUpdatePackageJson(directory, dependencies) {
   // Remove the auto-init command from the scripts
   for (const script of ["build", "start", "dev"]) {
     scripts[script] = scripts[script]?.replace("remix init && ", "");
+  }
+
+  for (const script of Object.entries(newScripts)) {
+    scripts[script] = newScripts[script];
   }
 
   packageJson.update({
