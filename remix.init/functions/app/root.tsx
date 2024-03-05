@@ -1,3 +1,4 @@
+import type { LinksFunction } from "@remix-run/node"
 import {
   Links,
   Meta,
@@ -5,17 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"
-import tailwindStyles from "~/styles/tailwind.css?url"
 import vidstackStyles from "@vidstack/react/player/styles/base.css?url"
 import { IntlProvider } from "react-intl"
-import type { LinksFunction } from "@remix-run/node";
-import rdtStylesheet from "remix-development-tools/index.css"; 
+import tailwindStyles from "~/styles/tailwind.css?url"
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStyles },
   { rel: "stylesheet", href: vidstackStyles },
-  ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
-];
+]
 
 function App() {
   return (
@@ -35,18 +33,10 @@ function App() {
   )
 }
 
-function AppWithProviders() {
+export default function AppWithProviders() {
   return (
     <IntlProvider locale="vi" defaultLocale="vi">
       <App />
     </IntlProvider>
   )
 }
-
-let AppExport = AppWithProviders
-if (process.env.NODE_ENV === 'development') { 
-   const { withDevTools } = await import("remix-development-tools"); 
-   AppExport = withDevTools(AppExport)
-}
-
-export default AppExport
